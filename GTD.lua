@@ -193,6 +193,10 @@ Options.Godmode:OnChanged(function(enabled)
 		end
  
 		humClone.Health = humClone.MaxHealth
+
+		char.HumanoidRootPart.Anchored = false
+		task.wait(1.75)
+		char.HumanoidRootPart.Anchored = true
 	end
 end)
 
@@ -1003,6 +1007,7 @@ if antiafk then
 else
 	game.Players.LocalPlayer:Kick("Executor doesn't support getconnections()")
 end
+
 
 
 
