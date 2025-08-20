@@ -175,25 +175,24 @@ Options.Godmode:OnChanged(function(enabled)
 		local cam = workspace.CurrentCamera
 		local pos, char = cam.CFrame, lp.Character
 		local hum = char and char.FindFirstChildWhichIsA(char, "Humanoid")
-local humClone = hum.Clone(hum)
-humClone.Parent, lp.Character = char, nil
-humClone.SetStateEnabled(humClone, 15, false)
-humClone.SetStateEnabled(humClone, 1, false)
-humClone.SetStateEnabled(humClone, 0, false)
-humClone.BreakJointsOnDeath, hum = true, hum.Destroy(hum)
+
+		local humClone = hum.Clone(hum)
+		humClone.Parent, lp.Character = char, nil
+		humClone.SetStateEnabled(humClone, 15, false)
+		humClone.SetStateEnabled(humClone, 1, false)
+		humClone.SetStateEnabled(humClone, 0, false)
+		humClone.BreakJointsOnDeath, hum = true, hum.Destroy(hum)
+		lp.Character, cam.CameraSubject, cam.CFrame = char, humClone, task.wait() and pos
+		humClone.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+			
+		local animScript = char.FindFirstChild(char, "Animate")
+		if animScript then
+			animScript.Disabled = true
+			task.wait()
+			animScript.Disabled = false
+		end
  
-lp.Character, cam.CameraSubject, cam.CFrame = char, humClone, wait() and pos
- 
-humClone.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
- 
-local animScript = char.FindFirstChild(char, "Animate")
-if animScript then
-    animScript.Disabled = true
-    wait()
-    animScript.Disabled = false
-end
- 
-humClone.Health = humClone.MaxHealth
+		humClone.Health = humClone.MaxHealth
 	end
 end)
 
@@ -1004,6 +1003,7 @@ if antiafk then
 else
 	game.Players.LocalPlayer:Kick("Executor doesn't support getconnections()")
 end
+
 
 
 
