@@ -1,4 +1,4 @@
---Fluent UI + SaveManager + Interface Manager
+--+ SaveManager + InterfaceManagerace Manager
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/StormSKz/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/StormSKz/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -8,6 +8,8 @@ local HttpService = game:GetService("HttpService")
 local player = game.Players.LocalPlayer
 local folderPath = "GTD/Settings"
 local filePath = folderPath .. "/" .. player.Name .. ".txt"
+
+print("script set up")
 
 if not isfolder("GTD") then makefolder("GTD") end
 if not isfolder(folderPath) then makefolder(folderPath) end
@@ -53,6 +55,8 @@ local Window = Fluent:CreateWindow({
 	Theme = "Dark",
 	MinimizeKey = Enum.KeyCode.LeftControl
 })
+
+print("created code")
 
 local Tabs = {
 	Main = Window:AddTab({ Title = "Main", Icon = "airplay" }),
@@ -625,7 +629,7 @@ local interact = function(path)
 	end
 end
 
--- oggle AutoPlay
+-- gle AutoPlay (
 Tabs.Main:AddToggle("AutoPlayagain", {
 	Title = "AutoPlay again",
 	Description = "Play the game again automatically.",
@@ -676,7 +680,7 @@ Options.AutoReturn:OnChanged(function(val)
 	end)
 end)
 
--- Toggle AutoPlay
+-- ggle AutoPlay (
 Tabs.Main:AddToggle("AutoSkip", {
 	Title = "AutoSkip",
 	Description = "Auto put Autoskip.",
@@ -705,10 +709,10 @@ Options.AutoSkip:OnChanged(function(val)
 	end)
 end)
 
--- Toggle AutoPlay
+-- ggle AutoPlay (
 Tabs.Main:AddToggle("AutoX2", {
 	Title = "Auto X2",
-	Description = "Automatically sets 2x speed when the button turns white.",
+	Description = "maticallyasetss2xsspeedpwhenwthe buttontturnsuwhite.ite.",
 	Default = set.Config.AutoX2
 })
 
@@ -1081,6 +1085,8 @@ SaveManager:SetFolder("GTD/Settings")
 InterfaceManager:BuildInterfaceSection(Tabs.Settings)
 SaveManager:BuildConfigSection(Tabs.Settings)
 Window:SelectTab(1)
+
+print("loading...")
 
 SaveManager:LoadAutoloadConfig()
 
