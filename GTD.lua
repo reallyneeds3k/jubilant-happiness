@@ -1,3 +1,7 @@
+game:GetService("StarterGui"):SetCore("SendNotification",{
+	Title = "started...!", -- Required
+	Text = "Starting  up this!", -- Required
+})
 --+ SaveManager + InterfaceManagerace Manager
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/StormSKz/Fluent/master/Addons/SaveManager.lua"))()
@@ -1100,3 +1104,4 @@ if antiafk then
 else
 	game.Players.LocalPlayer:Kick("Executor doesn't support getconnections()")
 end
+
