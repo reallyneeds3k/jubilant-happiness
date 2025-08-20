@@ -95,7 +95,7 @@ function g8oushafrkhijadewLoop(spacing, delaySeconds)
 				break
 			end
 		end
-		if mob ~= nil then task.wait(delaySeconds) continue end
+		if mob == nil then task.wait(delaySeconds) continue end
 		local pos = mob.Anchor.Position
 		local offsetY = pos.Y + 0.91475
 		local rotation = 180
@@ -1000,6 +1000,7 @@ if antiafk then
 else
 	game.Players.LocalPlayer:Kick("Executor doesn't support getconnections()")
 end
+
 
 
 
