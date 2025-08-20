@@ -1,3 +1,4 @@
+--+ SaveManager + InterfaceManagerace Manager
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/StormSKz/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/StormSKz/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -13,6 +14,7 @@ if not isfolder(folderPath) then makefolder(folderPath) end
 
 local default = {
 	Config = {
+		Godmode = false,
 		AutoPlayEnabled = false,
 		SelectedLobby = false,
 		AutoPlay = false,
@@ -157,7 +159,9 @@ function loopUpgradeUnits(delaySeconds)
 end
 
 Tabs.Main:AddToggle("Godmode", {
-
+	Title = "Godmode!",
+	Description = "Make yourself invincible!",
+	Default = set.Config.Godmode
 })
 
 Options.Godmode:OnChanged(function(enabled)
@@ -1097,5 +1101,3 @@ if antiafk then
 	end
 else
 	game.Players.LocalPlayer:Kick("Executor doesn't support getconnections()")
-end
-
