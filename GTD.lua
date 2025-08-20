@@ -171,10 +171,10 @@ Options.Godmode:OnChanged(function(enabled)
 	if enabled then
 		local Players_upvr = game.Players
 		local LocalPlayer = Players_upvr.LocalPlayer
-		--if replicatesignal then
+		if replicatesignal then
 			replicatesignal(LocalPlayer.ConnectDiedSignalBackend)
 			task.wait(Players_upvr.RespawnTime - 0.1)
-		--end
+		end
 		local Character = LocalPlayer.Character
 		local var4 = Character
 		if var4 then
@@ -662,11 +662,10 @@ Tabs.Main:AddToggle("AutoReturn", {
 
 
 Options.AutoReturn:OnChanged(function(val)
-	local  AutoReturn = val
 	set.Config.Return = val
 	save()
 
-	if not AutoReturn then
+	if not val then
 		return
 	end
 	task.spawn(function()
@@ -686,13 +685,11 @@ Tabs.Main:AddToggle("AutoSkip", {
 	Default = set.Config.AutoSkip
 })
 
-
 Options.AutoSkip:OnChanged(function(val)
-	local AutoSkip = val
 	set.Config.AutoSkip = val
 	save()
 
-	if not AutoSkip then
+	if not val then
 		return
 	end
 	task.spawn(function()
@@ -714,20 +711,16 @@ Tabs.Main:AddToggle("AutoX2", {
 	Default = set.Config.AutoX2
 })
 
-local runningAutoX2 = false
 Options.AutoX2:OnChanged(function(val)
 	set.Config.AutoX2 = val
 	save()
 
 	if not val then
-		runningAutoX2 = false
 		return
 	end
-
-	runningAutoX2 = true
-
+		
 	task.spawn(function()
-		while runningAutoX2 do
+		while set.Config.AutoX2 do
 			task.wait(0.2)
 			local button = game:GetService("Players").LocalPlayer.PlayerGui.GameGuiNoInset.Screen.Top.WaveControls.TickSpeed.Items["2"].Title
 
@@ -747,21 +740,16 @@ Tabs.Main:AddToggle("AutoX3", {
 	Default = set.Config.AutoX3
 })
 
-local runningAutoX3 = false
-
 Options.AutoX3:OnChanged(function(val)
 	set.Config.AutoX3 = val
 	save()
 
 	if not val then
-		runningAutoX3 = false
 		return
 	end
 
-	runningAutoX3 = true
-
 	task.spawn(function()
-		while runningAutoX3 do
+		while set.Config.AutoX3 do
 			task.wait(0.2)
 			local button = game:GetService("Players").LocalPlayer.PlayerGui.GameGuiNoInset.Screen.Top.WaveControls.TickSpeed.Items["3"].Title
 
@@ -782,14 +770,13 @@ Tabs.Main:AddToggle("AutoFPSLow", {
 })
 
 Options.AutoFPSLow:OnChanged(function(val)
-	local AutoFPSLow = val
-	set.Config.AutoSkip = val
+	set.Config.FPSLow = val
 	save()
 
-	if not AutoFPSLow then
+	if not val then
 		return
 	end
-	if set.Config.AutoSkip then
+	if set.Config.FPSLow then
 		if not game:IsLoaded() then game.Loaded:Wait() end
 		repeat task.wait() until game:GetService("Players")
 		repeat task.wait() until game:GetService("Players").LocalPlayer
@@ -983,11 +970,7 @@ Options.AutoPlaymode:OnChanged(function(state)
 						voteRemote:InvokeServer(difficultyArg)
 					end)
 				else
-					Fluent:Notify({
-	Title = "Couldn't find remote!",
-	Content = "Vote remote not found!",
-	Duration = 6
-})
+					
 				end
 
 				repeat task.wait(0.5) until not voteUI.Visible
@@ -1023,4 +1006,5 @@ if antiafk then
 else
 	game.Players.LocalPlayer:Kick("Executor doesn't support getconnections()")
 end
+
 
