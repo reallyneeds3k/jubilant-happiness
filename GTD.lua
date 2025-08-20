@@ -7,7 +7,6 @@ local HttpService = game:GetService("HttpService")
 local player = game.Players.LocalPlayer
 local folderPath = "GTD/Settings"
 local filePath = folderPath .. "/" .. player.Name .. ".txt"
-
 if not isfolder("GTD") then makefolder("GTD") end
 if not isfolder(folderPath) then makefolder(folderPath) end
 
@@ -1100,4 +1099,5 @@ if antiafk then
 	end
 else
 	game.Players.LocalPlayer:Kick("Executor doesn't support getconnections()")
+
 
