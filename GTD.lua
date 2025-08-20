@@ -1,3 +1,4 @@
+--+ SaveManager + InterfaceManagerace Manager
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/StormSKz/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/StormSKz/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -7,6 +8,7 @@ local HttpService = game:GetService("HttpService")
 local player = game.Players.LocalPlayer
 local folderPath = "GTD/Settings"
 local filePath = folderPath .. "/" .. player.Name .. ".txt"
+
 if not isfolder("GTD") then makefolder("GTD") end
 if not isfolder(folderPath) then makefolder(folderPath) end
 
@@ -706,15 +708,13 @@ Options.AutoSkip:OnChanged(function(val)
 	end)
 end)
 
--- ggle AutoPlay (
 Tabs.Main:AddToggle("AutoX2", {
 	Title = "Auto X2",
-	Description = "maticallyasetss2xsspeedpwhenwthe buttontturnsuwhite.ite.",
+	Description = "Automatic 2X",
 	Default = set.Config.AutoX2
 })
 
 local runningAutoX2 = false
-
 Options.AutoX2:OnChanged(function(val)
 	set.Config.AutoX2 = val
 	save()
@@ -1099,5 +1099,4 @@ if antiafk then
 	end
 else
 	game.Players.LocalPlayer:Kick("Executor doesn't support getconnections()")
-
-
+end
