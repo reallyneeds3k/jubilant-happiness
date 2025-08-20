@@ -171,10 +171,10 @@ Options.Godmode:OnChanged(function(enabled)
 	if enabled then
 		local Players_upvr = game.Players
 		local LocalPlayer = Players_upvr.LocalPlayer
-		if replicatesignal then
+		--if replicatesignal then
 			replicatesignal(LocalPlayer.ConnectDiedSignalBackend)
 			task.wait(Players_upvr.RespawnTime - 0.1)
-		end
+		--end
 		local Character = LocalPlayer.Character
 		local var4 = Character
 		if var4 then
@@ -959,7 +959,7 @@ Options.AutoPlaymode:OnChanged(function(state)
 		return
 	end
 
-	if not mode or mode == "" then
+	if set.Config.mode == "" then
 		return
 	end
 
@@ -974,13 +974,20 @@ Options.AutoPlaymode:OnChanged(function(state)
 			task.wait(0.2)
 
 			if voteUI.Visible then
-				local difficultyArg = difficultyMap[mode]
+				local difficultyArg = difficultyMap[set.Config.mode]
 				local voteRemote = ReplicatedStorage:WaitForChild("RemoteFunctions"):WaitForChild("PlaceDifficultyVote")
 
 				if voteRemote and difficultyArg then
 					pcall(function()
+						print("sent vote")
 						voteRemote:InvokeServer(difficultyArg)
 					end)
+				else
+					Fluent:Notify({
+	Title = "Couldn't find remote!",
+	Content = "Vote remote not found!",
+	Duration = 6
+})
 				end
 
 				repeat task.wait(0.5) until not voteUI.Visible
@@ -988,90 +995,6 @@ Options.AutoPlaymode:OnChanged(function(state)
 		end
 	end)
 end)
-
--- Floating Button
-if game.CoreGui:FindFirstChild("ThunderHub") then
-	game.CoreGui.ThunderHub:Destroy()
-end
-
-local ThunderGui = Instance.new("ScreenGui")
-ThunderGui.Name = "ThunderHub"
-ThunderGui.ResetOnSpawn = false
-ThunderGui.IgnoreGuiInset = true
-ThunderGui.Parent = game.CoreGui
-
-local DragFrame = Instance.new("Frame")
-DragFrame.Name = "DragFrame"
-DragFrame.Size = UDim2.new(0, 60, 0, 60)
-DragFrame.Position = UDim2.new(0.5, -35, 0, 100)
-DragFrame.BackgroundTransparency = 1
-DragFrame.Active = true
-DragFrame.Parent = ThunderGui
-
-local Button = Instance.new("ImageButton")
-Button.Name = "ToggleButton"
-Button.Size = UDim2.new(1, 0, 1, 0)
-Button.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-Button.BackgroundTransparency = 0.2
-Button.Image = "rbxassetid://106076048327121"
-Button.Parent = DragFrame
-
-local UICorner = Instance.new("UICorner")
-UICorner.CornerRadius = UDim.new(0, 16)
-UICorner.Parent = Button
-
-local UserInputService = game:GetService("UserInputService")
-local dragging = false
-local dragStart = Vector2.new()
-local startPos = Vector2.new()
-
-local function updateDrag()
-	local mousePos = UserInputService:GetMouseLocation()
-	local delta = mousePos - dragStart
-	local newPos = startPos + delta
-	DragFrame.Position = UDim2.new(0, newPos.X, 0, newPos.Y)
-end
-
-Button.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-		task.defer(function()
-			game:GetService("RunService").RenderStepped:Wait()
-			dragging = true
-			dragStart = UserInputService:GetMouseLocation()
-			startPos = DragFrame.AbsolutePosition
-		end)
-
-		input.Changed:Connect(function()
-			if input.UserInputState == Enum.UserInputState.End then
-				dragging = false
-			end
-		end)
-	end
-end)
-
-UserInputService.InputChanged:Connect(function(input)
-	if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-		updateDrag()
-	end
-end)
-
-Button.MouseButton1Click:Connect(function()
-	local coreGui = game:GetService("CoreGui")
-	local target = coreGui:FindFirstChild("ScreenGui")
-
-	if target then
-		target.Enabled = not target.Enabled
-
-		local children = target:GetChildren()
-		if #children >= 2 then
-			local secondChild = children[2]
-			if secondChild:IsA("GuiObject") then
-				secondChild.Visible = not secondChild.Visible
-			end
-		end
-	end
-end)
-
 
 SaveManager:SetLibrary(Fluent)
 InterfaceManager:SetLibrary(Fluent)
@@ -1100,3 +1023,4 @@ if antiafk then
 else
 	game.Players.LocalPlayer:Kick("Executor doesn't support getconnections()")
 end
+
