@@ -164,32 +164,36 @@ Options.Godmode:OnChanged(function(enabled)
 
 	if enabled then
 		local Players_upvr = game.Players
-		local LocalPlayer = Players_upvr.LocalPlayer
+		local lp = Players_upvr.LocalPlayer
 		if replicatesignal then
-			replicatesignal(LocalPlayer.ConnectDiedSignalBackend)
+			replicatesignal(lp.ConnectDiedSignalBackend)
 			task.wait(Players_upvr.RespawnTime - 0.1)
 		end
-		local Character = LocalPlayer.Character
-		local var4 = Character
-		if var4 then
-			var4 = Character:FindFirstChildWhichIsA("Humanoid")
-		end
-		local clone = var4:Clone()
-		clone.Parent = Character
-		LocalPlayer.Character = nil
-		clone:SetStateEnabled(15, false)
-		clone:SetStateEnabled(1, false)
-		clone:SetStateEnabled(0, false)
-		clone.BreakJointsOnDeath = true
-		LocalPlayer.Character = Character
-		clone.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
-		local Animate = Character:FindFirstChild("Animate")
-		if Animate then
-			Animate.Disabled = true
-			task.wait()
-			Animate.Disabled = false
-		end
-		clone.Health = 0
+		local Character = lp.Character
+		local Players = game:GetService("Players")
+ 
+		local cam = workspace.CurrentCamera
+		local pos, char = cam.CFrame, lp.Character
+		local hum = char and char.FindFirstChildWhichIsA(char, "Humanoid")
+local humClone = hum.Clone(hum)
+humClone.Parent, lp.Character = char, nil
+humClone.SetStateEnabled(humClone, 15, false)
+humClone.SetStateEnabled(humClone, 1, false)
+humClone.SetStateEnabled(humClone, 0, false)
+humClone.BreakJointsOnDeath, hum = true, hum.Destroy(hum)
+ 
+lp.Character, cam.CameraSubject, cam.CFrame = char, humClone, wait() and pos
+ 
+humClone.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+ 
+local animScript = char.FindFirstChild(char, "Animate")
+if animScript then
+    animScript.Disabled = true
+    wait()
+    animScript.Disabled = false
+end
+ 
+humClone.Health = humClone.MaxHealth
 	end
 end)
 
@@ -1000,6 +1004,7 @@ if antiafk then
 else
 	game.Players.LocalPlayer:Kick("Executor doesn't support getconnections()")
 end
+
 
 
 
