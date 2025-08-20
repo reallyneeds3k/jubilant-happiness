@@ -61,12 +61,6 @@ local Tabs = {
 	Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
 }
 local Options = Fluent.Options
-Tabs.Main:AddParagraph(
-	{
-		Title = "Welcome!", 
-		Content = "This is modified!"
-	}
-)
 
 local lastPlacedPositions = {}
 local function isPositionOccupiedCompletely(posToCheck, threshold)
@@ -79,7 +73,7 @@ local function isPositionOccupiedCompletely(posToCheck, threshold)
 			end
 		end
 	end
-	for _, oldPos in ipairs(lastPlacedPositions) do
+	for _, oldPos in pairs(lastPlacedPositions) do
 		if (oldPos - posToCheck).Magnitude < threshold then
 			return true
 		end
@@ -111,7 +105,7 @@ function g8oushafrkhijadewLoop(spacing, delaySeconds)
 			table.insert(positions, Vector3.new(pos.X + math.cos(angle)*spacing, offsetY, pos.Z + math.sin(angle)*spacing))
 		end
 		local usedTools = {}
-		for _, v3 in ipairs(positions) do
+		for _, v3 in pairs(positions) do
 			if isPositionOccupiedCompletely(v3, 4.5) then continue end
 			for _, tool in ipairs(backpack:GetChildren()) do
 				if tool:IsA("Tool") == true and not usedTools[tool] then
@@ -195,7 +189,7 @@ Options.Godmode:OnChanged(function(enabled)
 			task.wait()
 			Animate.Disabled = false
 		end
-		clone.Health = clone.MaxHealth
+		clone.Health = 0
 	end
 end)
 
@@ -1006,5 +1000,6 @@ if antiafk then
 else
 	game.Players.LocalPlayer:Kick("Executor doesn't support getconnections()")
 end
+
 
 
