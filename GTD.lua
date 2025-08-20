@@ -1,15 +1,16 @@
-game.Lightning.ClockTIme = 0
 --+ SaveManager + InterfaceManagerace Manager
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/StormSKz/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/StormSKz/Fluent/master/Addons/InterfaceManager.lua"))()
 
-task.wait(3)
-game.Lightning.ClockTIme = 14
-
 -- config
 local HttpService = game:GetService("HttpService")
 local player = game.Players.LocalPlayer
+local folderPath = "GTD/Settings"
+local filePath = folderPath .. "/" .. player.Name .. ".txt"
+
+if not isfolder("GTD") then makefolder("GTD") end
+if not isfolder(folderPath) then makefolder(folderPath) end
 
 local default = {
 	Config = {
@@ -29,11 +30,17 @@ local default = {
 }
 
 -- config
-local set = default
+local set
+if pcall(function() readfile(filePath) end) then
+	set = HttpService:JSONDecode(readfile(filePath))
+else
+	writefile(filePath, HttpService:JSONEncode(default))
+	set = default
+end
 
 -- config
 local function save()
-	
+	writefile(filePath, HttpService:JSONEncode(set))
 end
 
 -- Fluent
@@ -45,11 +52,6 @@ local Window = Fluent:CreateWindow({
 	Acrylic = true,
 	Theme = "Dark",
 	MinimizeKey = Enum.KeyCode.LeftControl
-})
-
-game:GetService("StarterGui"):SetCore("SendNotification",{
-	Title = "Loaded...", -- Required
-	Text = "Created main game UI!" -- Required
 })
 
 local Tabs = {
@@ -1080,8 +1082,6 @@ InterfaceManager:BuildInterfaceSection(Tabs.Settings)
 SaveManager:BuildConfigSection(Tabs.Settings)
 Window:SelectTab(1)
 
-print("loading...")
-
 SaveManager:LoadAutoloadConfig()
 
 Fluent:Notify({
@@ -1099,6 +1099,3 @@ if antiafk then
 else
 	game.Players.LocalPlayer:Kick("Executor doesn't support getconnections()")
 end
-
-
-
