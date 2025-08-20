@@ -3,6 +3,11 @@ local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/StormSKz/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/StormSKz/Fluent/master/Addons/InterfaceManager.lua"))()
 
+game:GetService("StarterGui"):SetCore("SendNotification",{
+	Title = "Loaded...", -- Required
+	Text = "The game is loading...!", -- Required
+})
+
 -- config
 local HttpService = game:GetService("HttpService")
 local player = game.Players.LocalPlayer
@@ -41,6 +46,11 @@ local Window = Fluent:CreateWindow({
 	Acrylic = true,
 	Theme = "Dark",
 	MinimizeKey = Enum.KeyCode.LeftControl
+})
+
+game:GetService("StarterGui"):SetCore("SendNotification",{
+	Title = "Loaded...", -- Required
+	Text = "Created main game UI!" -- Required
 })
 
 local Tabs = {
