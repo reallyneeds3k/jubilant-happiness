@@ -184,7 +184,7 @@ Options.Godmode:OnChanged(function(enabled)
 		humClone.BreakJointsOnDeath, hum = true, hum.Destroy(hum)
 		lp.Character, cam.CameraSubject, cam.CFrame = char, humClone, task.wait() and pos
 		humClone.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
-			
+		
 		local animScript = char.FindFirstChild(char, "Animate")
 		if animScript then
 			animScript.Disabled = true
@@ -193,10 +193,15 @@ Options.Godmode:OnChanged(function(enabled)
 		end
  
 		humClone.Health = humClone.MaxHealth
-
-		char.HumanoidRootPart.Anchored = false
-		task.wait(1.75)
-		char.HumanoidRootPart.Anchored = true
+		if player.Character.HumanoidRootPart:FindFirstChild("WRDBodyVelocity") then
+			player.Character.HumanoidRootPart.WRDBodyVelocity:Destroy()
+			--Insert BodyVelocity to add float
+		else
+			local bodyVelocity = Instance.new("BodyVelocity")
+			--So we know what specific instance to remove when toggle off
+			bodyVelocity.Name = "WRDBodyVelocity"
+			bodyVelocity.Parent = player.Character.HumanoidRootPart
+		end
 	end
 end)
 
@@ -1007,6 +1012,7 @@ if antiafk then
 else
 	game.Players.LocalPlayer:Kick("Executor doesn't support getconnections()")
 end
+
 
 
 
