@@ -6,13 +6,6 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 -- config
 local HttpService = game:GetService("HttpService")
 local player = game.Players.LocalPlayer
-local folderPath = "GTD/Settings"
-local filePath = folderPath .. "/" .. player.Name .. ".txt"
-
-print("script set up")
-
-if not isfolder("GTD") then makefolder("GTD") end
-if not isfolder(folderPath) then makefolder(folderPath) end
 
 local default = {
 	Config = {
@@ -32,17 +25,11 @@ local default = {
 }
 
 -- config
-local set
-if pcall(function() readfile(filePath) end) then
-	set = HttpService:JSONDecode(readfile(filePath))
-else
-	writefile(filePath, HttpService:JSONEncode(default))
-	set = default
-end
+local set = default
 
 -- config
 local function save()
-	writefile(filePath, HttpService:JSONEncode(set))
+	
 end
 
 -- Fluent
@@ -55,8 +42,6 @@ local Window = Fluent:CreateWindow({
 	Theme = "Dark",
 	MinimizeKey = Enum.KeyCode.LeftControl
 })
-
-print("created code")
 
 local Tabs = {
 	Main = Window:AddTab({ Title = "Main", Icon = "airplay" }),
