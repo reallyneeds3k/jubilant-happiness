@@ -73,55 +73,65 @@ local function isPositionOccupiedCompletely(posToCheck, threshold)
 			end
 		end
 	end
-	for _, oldPos in pairs(lastPlacedPositions) do
+	
+	for _, oldPos in ipairs(lastPlacedPositions) do
 		if (oldPos - posToCheck).Magnitude < threshold then
 			return true
 		end
 	end
+	
 	return false
 end
 
 function g8oushafrkhijadewLoop(spacing, delaySeconds)
 	spacing = spacing or 8
 	delaySeconds = delaySeconds or 3
+	
 	local placeUnit = game:GetService("ReplicatedStorage"):WaitForChild("RemoteFunctions"):WaitForChild("PlaceUnit")
 	local backpack = game:GetService("Players").LocalPlayer:WaitForChild("Backpack")
+	local entities = workspace:WaitForChild("Map"):WaitForChild("Entities")
+	
 	while Options.AutoPlayEnabled.Value do
 		lastPlacedPositions = {}
+		
 		local mob = nil
-		for _, child in ipairs(workspace.Map.Entities:GetChildren()) do
+		for _, child in ipairs(entities:GetChildren()) do
 			if child:IsA("Model") == true and string.find(child.Name:lower(), "enemy") and child:FindFirstChild("Anchor") ~= nil then
 				mob = child
 				break
 			end
 		end
-		if mob == nil then task.wait(delaySeconds) continue end
-		local pos = mob.Anchor.Position
-		local offsetY = pos.Y + 0.91475
-		local rotation = 180
-		local positions = {}
-		for i = 1, 8 do
-			local angle = (math.pi * 2) * (i / 8)
-			table.insert(positions, Vector3.new(pos.X + math.cos(angle)*spacing, offsetY, pos.Z + math.sin(angle)*spacing))
-		end
-		local usedTools = {}
-		for _, v3 in pairs(positions) do
-			if isPositionOccupiedCompletely(v3, 4.5) then continue end
-			for _, tool in ipairs(backpack:GetChildren()) do
-				if tool:IsA("Tool") == true and not usedTools[tool] then
-					local itemId = tool:GetAttribute("ItemID")
-					if typeof(itemId) == "string" and string.sub(itemId, 1, 14) == "tl_unitplacer_" then
-						local unitName = string.sub(itemId, 15)
-						local cf = CFrame.new(v3.X, v3.Y, v3.Z) * CFrame.Angles(0, math.rad(rotation), 0)
-						placeUnit:InvokeServer(unitName, {Valid = true, Rotation = rotation, CF = cf, Position = vector.create(v3.X, v3.Y, v3.Z)})
-						table.insert(lastPlacedPositions, v3)
-						usedTools[tool] = true
-						task.wait(0.1)
-						break
+		
+		if (mob ~= nil) then
+			local pos = mob.Anchor.Position
+			local offsetY = pos.Y + 0.91475
+			local rotation = 180
+			local positions = {}
+			for i = 1, 8 do
+				local angle = (math.pi * 2) * (i / 8)
+				table.insert(positions, Vector3.new(pos.X + math.cos(angle)*spacing, offsetY, pos.Z + math.sin(angle)*spacing))
+			end
+			
+			local usedTools = {}
+			for _, v3 in ipairs(positions) do
+				if isPositionOccupiedCompletely(v3, 4.5) then continue end
+				for _, tool in ipairs(backpack:GetChildren()) do
+					if (tool:IsA("Tool") == true and not usedTools[tool]) then
+						local itemId = tool:GetAttribute("ItemID")
+						if typeof(itemId) == "string" and string.sub(itemId, 1, 14) == "tl_unitplacer_" then
+							local unitName = string.sub(itemId, 15)
+							local cf = CFrame.new(v3.X, v3.Y, v3.Z) * CFrame.Angles(0, math.rad(rotation), 0)
+							placeUnit:InvokeServer(unitName, {Valid = true, Rotation = rotation, CF = cf, Position = vector.create(v3.X, v3.Y, v3.Z)})
+							table.insert(lastPlacedPositions, v3)
+							usedTools[tool] = true
+							task.wait(0.1)
+							break
+						end
 					end
 				end
 			end
 		end
+		
 		task.wait(delaySeconds)
 	end
 end
@@ -631,20 +641,80 @@ Tabs.Main:AddToggle("AutoPlayagain", {
 	Default = set.Config.again
 })
 
+local function fpsFunctionLow()
+		if not game:IsLoaded() then game.Loaded:Wait() end
+		repeat task.wait() until game:GetService("Players")
+		repeat task.wait() until game:GetService("Players").LocalPlayer
+		repeat task.wait() until game:GetService("ReplicatedStorage")
+		repeat task.wait() until game:GetService("ReplicatedFirst")
+		
+		local function UltraLowGraphics()
+			for _, obj in ipairs(workspace:GetDescendants()) do
+				if obj:IsA("ParticleEmitter") or obj:IsA("Smoke") or obj:IsA("Fire") or obj:IsA("Sparkles") then
+					obj:Destroy()
+				end
 
+				if obj:IsA("PointLight") or obj:IsA("SpotLight") or obj:IsA("SurfaceLight") then
+					obj:Destroy()
+				end
+
+				if obj:IsA("Decal") or obj:IsA("Texture") then
+					obj:Destroy()
+				end
+
+				if obj:IsA("Accessory") or obj:IsA("Clothing") or obj:IsA("Shirt") or obj:IsA("Pants") or obj:IsA("ShirtGraphic") then
+					obj:Destroy()
+				end
+
+				if obj:IsA("BasePart") then
+					obj.Material = Enum.Material.Plastic
+					obj.Reflectance = 0
+					obj.CastShadow = false
+				end
+			end
+
+			if workspace:FindFirstChildOfClass("Terrain") then
+				local terrain = workspace.Terrain
+				terrain.WaterWaveSize = 0
+				terrain.WaterTransparency = 1
+				terrain.WaterReflectance = 0
+				terrain.WaterColor = Color3.new(0, 0, 0)
+			end
+
+			local lighting = game:GetService("Lighting")
+			lighting.GlobalShadows = false
+			lighting.FogEnd = 1000000
+			lighting.Brightness = 1
+		end
+
+		if game:IsLoaded() then
+			UltraLowGraphics()
+		else
+			game.Loaded:Wait()
+			UltraLowGraphics()
+		end
+end
+
+local PlayAgainConnection = nil
+local PlayAgainBtn = player.PlayerGui.GameGui.Screen.Middle.GameEnd.Items.Frame.Actions.Items.Again
 Options.AutoPlayagain:OnChanged(function(val)
-	local AutoPlayagain = val
 	set.Config.again = val
 	save()
 
-	if not AutoPlayagain then
+	if (val == false) then
+		if (PlayAgainConnection ~= nil) then
+			PlayAgainConnection:Disconnect()
+		end
+		
 		return
 	end
-	task.spawn(function()
-		while set.Config.again do
-			task.wait(0.2)
-			if game:GetService("Players").LocalPlayer.PlayerGui.GameGui.Screen.Middle.GameEnd.Items.Frame.Actions.Items.Again.Visible and game.PlaceId ~= 108533757090220 then
-				interact(game:GetService("Players").LocalPlayer.PlayerGui.GameGui.Screen.Middle.GameEnd.Items.Frame.Actions.Items.Again)
+	
+	PlayAgainConnection = PlayAgainBtn:GetPropertyChangedSignal("Visible"):Connect(function()
+		if (PlayAgainBtn.Visible == true and game.PlaceId ~= 108533757090220) then
+			interact(PlayAgainBtn)
+			
+			if (set.Config.FPSLow) then
+				fpsFunctionLow()
 			end
 		end
 	end)
@@ -655,7 +725,6 @@ Tabs.Main:AddToggle("AutoReturn", {
 	Description = "Return back to the lobby.",
 	Default = set.Config.Return
 })
-
 
 Options.AutoReturn:OnChanged(function(val)
 	set.Config.Return = val
@@ -772,58 +841,9 @@ Options.AutoFPSLow:OnChanged(function(val)
 	if not val then
 		return
 	end
-	if set.Config.FPSLow then
-		if not game:IsLoaded() then game.Loaded:Wait() end
-		repeat task.wait() until game:GetService("Players")
-		repeat task.wait() until game:GetService("Players").LocalPlayer
-		repeat task.wait() until game:GetService("ReplicatedStorage")
-		repeat task.wait() until game:GetService("ReplicatedFirst")
-		--- ��?ลิก GUI ---
-		local function UltraLowGraphics()
-			for _, obj in ipairs(workspace:GetDescendants()) do
-				if obj:IsA("ParticleEmitter") or obj:IsA("Smoke") or obj:IsA("Fire") or obj:IsA("Sparkles") then
-					obj:Destroy()
-				end
-
-				if obj:IsA("PointLight") or obj:IsA("SpotLight") or obj:IsA("SurfaceLight") then
-					obj:Destroy()
-				end
-
-				if obj:IsA("Decal") or obj:IsA("Texture") then
-					obj:Destroy()
-				end
-
-				if obj:IsA("Accessory") or obj:IsA("Clothing") or obj:IsA("Shirt") or obj:IsA("Pants") or obj:IsA("ShirtGraphic") then
-					obj:Destroy()
-				end
-
-				if obj:IsA("BasePart") then
-					obj.Material = Enum.Material.Plastic
-					obj.Reflectance = 0
-					obj.CastShadow = false
-				end
-			end
-
-			if workspace:FindFirstChildOfClass("Terrain") then
-				local terrain = workspace.Terrain
-				terrain.WaterWaveSize = 0
-				terrain.WaterTransparency = 1
-				terrain.WaterReflectance = 0
-				terrain.WaterColor = Color3.new(0, 0, 0)
-			end
-
-			local lighting = game:GetService("Lighting")
-			lighting.GlobalShadows = false
-			lighting.FogEnd = 1000000
-			lighting.Brightness = 1
-		end
-
-		if game:IsLoaded() then
-			UltraLowGraphics()
-		else
-			game.Loaded:Wait()
-			UltraLowGraphics()
-		end
+	
+	if (set.Config.FPSLow) then
+		fpsFunctionLow()
 	end
 end)
 
@@ -962,11 +982,8 @@ Options.AutoPlaymode:OnChanged(function(state)
 
 				if voteRemote and difficultyArg then
 					pcall(function()
-						print("sent vote")
 						voteRemote:InvokeServer(difficultyArg)
 					end)
-				else
-					
 				end
 
 				repeat task.wait(0.5) until not voteUI.Visible
